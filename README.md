@@ -1,485 +1,227 @@
-# Documentação da redzlib v1.1.0
+# redz Hub v2 - Biblioteca UI para Roblox Exploits
 
-A **redzlib** é uma biblioteca Lua para criar interfaces gráficas (GUIs) em Roblox, com suporte a temas modernos como Amoled glassmorphism, botões personalizáveis, seletores de cores e dropdowns atualizáveis. Esta documentação cobre como usar, criar e atualizar elementos da interface, incluindo exemplos comentados e métodos disponíveis.
-
----
-
-## Índice
-1. [Visão Geral](#visão-geral)
-2. [Instalação](#instalação)
-3. [Criação de uma Janela](#criação-de-uma-janela)
-4. [Métodos Disponíveis](#métodos-disponíveis)
-   - [Janela (Window)](#janela-window)
-   - [Aba (Tab)](#aba-tab)
-   - [Seção (Section)](#seção-section)
-   - [Parágrafo (Paragraph)](#parágrafo-paragraph)
-   - [Botão (Button)](#botão-button)
-   - [Toggle](#toggle)
-   - [Dropdown](#dropdown)
-   - [Slider](#slider)
-   - [Caixa de Texto (TextBox)](#caixa-de-texto-textbox)
-   - [Convite do Discord](#convite-do-discord)
-   - [Seletor de Cores (ColorPicker)](#seletor-de-cores-colorpicker)
-5. [Atualização de Elementos](#atualização-de-elementos)
-   - [Atualizar Dropdowns](#atualizar-dropdowns)
-6. [Exemplo Completo](#exemplo-completo)
-7. [Notas Finais](#notas-finais)
-
----
+[![GitHub stars](https://img.shields.io/github/stars/TERCEIRO-COMANDO-DA-CAPITAL/hubV2?style=social)](https://github.com/TERCEIRO-COMANDO-DA-CAPITAL/hubV2) [![GitHub forks](https://img.shields.io/github/forks/TERCEIRO-COMANDO-DA-CAPITAL/hubV2?style=social)](https://github.com/TERCEIRO-COMANDO-DA-CAPITAL/hubV2) [![GitHub license](https://img.shields.io/github/license/TERCEIRO-COMANDO-DA-CAPITAL/hubV2)](https://github.com/TERCEIRO-COMANDO-DA-CAPITAL/hubV2)
 
 ## Visão Geral
-A redzlib permite criar interfaces com temas visuais (Darker, Dark, Purple, Amoled) e elementos interativos como botões, toggles, dropdowns, sliders, caixas de texto e seletores de cores. Suporta personalização de cores, tamanhos de botões, efeitos de glassmorphism e interações otimizadas para dispositivos móveis.
+O **redz Hub v2** é uma biblioteca Lua avançada para criar interfaces gráficas (GUIs) modernas e responsivas no Roblox, otimizada para exploits e scripts de automação. Inspirada em designs como glassmorphism e Amoled, ela permite criar hubs de cheats, menus de configurações e painéis interativos com animações suaves, suporte a mobile e personalizações fáceis.
 
----
+### Recursos Principais
+- **Temas Visuais**: Suporte a temas como Amoled (glassmorphism escuro com transparência), Darker, Dark e Purple, com acentos vermelhos para destaques (ex.: toggles ativos).
+- **Elementos Interativos**: Botões com tamanhos ajustáveis, toggles com estados visuais, dropdowns atualizáveis dinamicamente, sliders, caixas de texto, seletores de cores (com suporte touch para mobile) e parágrafos informativos.
+- **Estrutura Flexível**: Janelas, abas e seções organizadas, com diálogos modais e ícones Lucide.
+- **Otimização para Exploits**: Leve, sem dependências externas, compatível com executores como Synapse X, Krnl, Fluxus e outros. Suporte a flags para salvar estados persistentes.
+- **Efeitos Modernos**: Animações com TweenService, ripple effects em botões, sombras simuladas e gradientes para um visual premium.
+- **Compatibilidade**: Funciona em PC e mobile, com drag-and-drop e interações touch.
+
+O hub é ideal para desenvolvedores de scripts Roblox que querem um menu profissional para features como aimbot, ESP, speed hacks, etc., sem complicações.
 
 ## Instalação
-1. Copie o código da biblioteca redzlib fornecido anteriormente.
-2. Cole-o em um script Lua no Roblox Studio (por exemplo, em um `LocalScript` dentro de `StarterPlayerScripts`).
-3. Certifique-se de que o script tenha acesso ao `CoreGui` para renderizar a interface.
+### Via Loadstring (Recomendado para Exploits)
+Cole o seguinte código no seu executor de exploits (ex.: Synapse X, Krnl). Isso carrega a biblioteca diretamente do GitHub.
 
 ```lua
-local redzlib = loadstring(game:HttpGet("URL_DA_BIBLIOTECA"))() -- Se hospedado online
--- ou
-local redzlib = require(game.ReplicatedStorage.redzlib) -- Se local
+-- Loadstring para redz Hub v2
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/TERCEIRO-COMANDO-DA-CAPITAL/hubV2/refs/heads/main/hubV2.txt"))()
+
+-- Exemplo rápido: Criar uma janela básica
+local Window = redzlib:MakeWindow({Title = "Meu Exploit Hub", Theme = "Amoled"})
+local Tab = Window:MakeTab({Title = "Features", Icon = "settings"})
+
+-- Adicione elementos aqui (veja o tutorial abaixo)
 ```
 
----
+**Nota**: Certifique-se de que o executor suporte `loadstring` e `HttpGet`. Se o link falhar, verifique a conexão ou baixe o arquivo manualmente.
 
-## Criação de uma Janela
-Para começar, crie uma janela principal com o método `MakeWindow`. Este método aceita configurações como título, subtítulo, tamanho e tema.
+### Via Download Manual
+1. Acesse [hubV2.txt](https://raw.githubusercontent.com/TERCEIRO-COMANDO-DA-CAPITAL/hubV2/refs/heads/main/hubV2.txt) e copie o conteúdo.
+2. Cole em um arquivo `.lua` e execute no seu exploit.
+3. Ou clone o repositório: `git clone https://github.com/TERCEIRO-COMANDO-DA-CAPITAL/hubV2.git`.
+
+## Tutorial de Uso
+Este tutorial mostra como construir um hub completo passo a passo. Começamos com o **modelo básico do hub** (estrutura geral), e depois detalhamos os **métodos de uso para cada elemento**.
+
+### 1. Modelo Básico do Hub
+O hub segue uma estrutura hierárquica: **Janela** > **Aba** > **Seção** > **Elementos** (botões, toggles, etc.). Aqui vai um exemplo de modelo inicial para um exploit simples (ex.: menu de hacks).
 
 ```lua
+-- Carregamento da biblioteca
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/TERCEIRO-COMANDO-DA-CAPITAL/hubV2/refs/heads/main/hubV2.txt"))()
+
+-- 1. Criar a Janela Principal (contêiner raiz)
 local Window = redzlib:MakeWindow({
-    Title = "Minha Interface",
-    SubTitle = "Bem-vindo!",
-    Size = UDim2.fromOffset(600, 400),
-    Theme = "Amoled" -- Darker, Dark, Purple, Amoled
-})
-```
-
-### Parâmetros de MakeWindow
-| Parâmetro | Tipo | Descrição | Padrão |
-|-----------|------|-----------|--------|
-| Title | string | Título da janela | "redz Hub" |
-| SubTitle | string | Subtítulo da janela | "" |
-| Size | UDim2 | Tamanho da janela | UDim2.fromOffset(550, 380) |
-| Theme | string | Tema visual | "Darker" |
-
----
-
-## Métodos Disponíveis
-
-### Janela (Window)
-A janela é o contêiner principal da interface. Métodos disponíveis:
-
-- **CloseBtn()**: Fecha a janela.
-  ```lua
-  Window:CloseBtn()
-  ```
-
-- **MinimizeBtn()**: Minimiza ou restaura a janela.
-  ```lua
-  Window:MinimizeBtn()
-  ```
-
-- **Minimize()**: Alterna a visibilidade da janela.
-  ```lua
-  Window:Minimize()
-  ```
-
-- **AddMinimizeButton(Configs)**: Adiciona um botão de minimizar flutuante.
-  ```lua
-  Window:AddMinimizeButton({
-      Button = { Image = "rbxassetid://10734924532" },
-      Corner = UDim.new(0, 8)
-  })
-  ```
-
-- **Set(Title, SubTitle)**: Define título e/ou subtítulo.
-  ```lua
-  Window:Set("Novo Título", "Novo Subtítulo")
-  ```
-
-- **Dialog(Configs)**: Cria uma caixa de diálogo com botões.
-  ```lua
-  local Dialog = Window:Dialog({
-      Title = "Confirmação",
-      Text = "Deseja continuar?",
-      Options = {
-          { Name = "Sim", Callback = function() print("Confirmado!") end },
-          { Name = "Não", Callback = function() print("Cancelado!") end }
-      }
-  })
-  Dialog:Close() -- Fecha o diálogo
-  ```
-
-- **SelectTab(Tab)**: Seleciona uma aba específica por índice ou objeto.
-  ```lua
-  Window:SelectTab(1) -- Seleciona a primeira aba
-  ```
-
-- **MakeTab(Configs)**: Cria uma nova aba.
-  ```lua
-  local Tab = Window:MakeTab({
-      Title = "Aba Principal",
-      Icon = "home"
-  })
-  ```
-
-### Aba (Tab)
-Cada aba contém elementos como seções, botões, etc. Métodos disponíveis:
-
-- **Enable()**: Ativa a aba.
-  ```lua
-  Tab:Enable()
-  ```
-
-- **Disable()**: Desativa a aba.
-  ```lua
-  Tab:Disable()
-  ```
-
-- **Visible(Bool)**: Define a visibilidade da aba.
-  ```lua
-  Tab:Visible(false) -- Esconde a aba
-  ```
-
-- **Destroy()**: Remove a aba.
-  ```lua
-  Tab:Destroy()
-  ```
-
-- **AddSection(Configs)**: Adiciona uma seção com cor personalizável.
-  ```lua
-  local Section = Tab:AddSection({
-      Name = "Minha Seção",
-      Color = Color3.fromRGB(255, 0, 0) -- Vermelho
-  })
-  ```
-
-### Seção (Section)
-- **Visible(Bool)**: Define a visibilidade da seção.
-  ```lua
-  Section:Visible(false)
-  ```
-
-- **Destroy()**: Remove a seção.
-  ```lua
-  Section:Destroy()
-  ```
-
-- **Set(Name)**: Altera o nome da seção.
-  ```lua
-  Section:Set("Nova Seção")
-  ```
-
-### Parágrafo (Paragraph)
-- **Visible(Bool)**: Define a visibilidade.
-  ```lua
-  Paragraph:Visible(false)
-  ```
-
-- **Destroy()**: Remove o parágrafo.
-  ```lua
-  Paragraph:Destroy()
-  ```
-
-- **SetTitle(Title)**: Altera o título.
-  ```lua
-  Paragraph:SetTitle("Novo Título")
-  ```
-
-- **SetDesc(Description)**: Altera a descrição.
-  ```lua
-  Paragraph:SetDesc("Nova descrição")
-  ```
-
-- **Set(Title, Description)**: Altera título e descrição.
-  ```lua
-  Paragraph:Set("Título", "Descrição")
-  ```
-
-### Botão (Button)
-- **Visible(Bool)**: Define a visibilidade.
-  ```lua
-  Button:Visible(false)
-  ```
-
-- **Destroy()**: Remove o botão.
-  ```lua
-  Button:Destroy()
-  ```
-
-- **Callback(Func)**: Define ou atualiza a função de callback.
-  ```lua
-  Button:Callback(function() print("Novo clique!") end)
-  ```
-
-- **Set(Title, Description)**: Altera título e/ou descrição.
-  ```lua
-  Button:Set("Novo Botão", "Nova descrição")
-  ```
-
-### Toggle
-- **Visible(Bool)**: Define a visibilidade.
-  ```lua
-  Toggle:Visible(false)
-  ```
-
-- **Destroy()**: Remove o toggle.
-  ```lua
-  Toggle:Destroy()
-  ```
-
-- **Callback(Func)**: Define ou atualiza o callback.
-  ```lua
-  Toggle:Callback(function(value) print("Toggle:", value) end)
-  ```
-
-- **Set(Value)**: Define o estado (true/false) ou título/descrição.
-  ```lua
-  Toggle:Set(true) -- Ativa o toggle
-  Toggle:Set("Novo Toggle", "Nova descrição")
-  ```
-
-### Dropdown
-- **Visible(Bool)**: Define a visibilidade.
-  ```lua
-  Dropdown:Visible(false)
-  ```
-
-- **Destroy()**: Remove o dropdown.
-  ```lua
-  Dropdown:Destroy()
-  ```
-
-- **Callback(Func)**: Define ou atualiza o callback.
-  ```lua
-  Dropdown:Callback(function(selected) print("Selecionado:", selected) end)
-  ```
-
-- **Add(Options)**: Adiciona novas opções.
-  ```lua
-  Dropdown:Add({"Opção 3", "Opção 4"})
-  ```
-
-- **Remove(Option)**: Remove uma opção pelo nome ou índice.
-  ```lua
-  Dropdown:Remove("Opção 1")
-  ```
-
-- **Select(Option)**: Seleciona uma opção pelo nome ou índice.
-  ```lua
-  Dropdown:Select("Opção 2")
-  ```
-
-- **Set(Options, Clear)**: Atualiza a lista de opções (Clear = true limpa as opções atuais).
-  ```lua
-  Dropdown:Set({"Nova Opção 1", "Nova Opção 2"}, true)
-  ```
-
-### Slider
-- **Visible(Bool)**: Define a visibilidade.
-  ```lua
-  Slider:Visible(false)
-  ```
-
-- **Destroy()**: Remove o slider.
-  ```lua
-  Slider:Destroy()
-  ```
-
-- **Callback(Func)**: Define ou atualiza o callback.
-  ```lua
-  Slider:Callback(function(value) print("Valor:", value) end)
-  ```
-
-- **Set(Value)**: Define o valor do slider ou título/descrição.
-  ```lua
-  Slider:Set(50) -- Define valor 50
-  Slider:Set("Novo Slider", "Nova descrição")
-  ```
-
-### Caixa de Texto (TextBox)
-- **Visible(Bool)**: Define a visibilidade.
-  ```lua
-  TextBox:Visible(false)
-  ```
-
-- **Destroy()**: Remove a caixa de texto.
-  ```lua
-  TextBox:Destroy()
-  ```
-
-- **OnChanging(Func)**: Define uma função para manipular o texto durante a digitação.
-  ```lua
-  TextBox.OnChanging = function(text) return text:upper() end
-  ```
-
-### Convite do Discord
-- **Visible(Bool)**: Define a visibilidade.
-  ```lua
-  DiscordInvite:Visible(false)
-  ```
-
-- **Destroy()**: Remove o convite.
-  ```lua
-  DiscordInvite:Destroy()
-  ```
-
-### Seletor de Cores (ColorPicker)
-- **Visible(Bool)**: Define a visibilidade.
-  ```lua
-  ColorPicker:Visible(false)
-  ```
-
-- **Destroy()**: Remove o seletor de cores.
-  ```lua
-  ColorPicker:Destroy()
-  ```
-
-- **Callback(Func)**: Define ou atualiza o callback.
-  ```lua
-  ColorPicker:Callback(function(color) print("Cor:", color) end)
-  ```
-
-- **Set(Color)**: Define a cor selecionada.
-  ```lua
-  ColorPicker:Set(Color3.fromRGB(0, 255, 0)) -- Verde
-  ```
-
----
-
-## Atualização de Elementos
-
-### Atualizar Dropdowns
-Os dropdowns podem ser atualizados dinamicamente usando os métodos `Add`, `Remove` e `Set`.
-
-- **Adicionar Opções**:
-  ```lua
-  Dropdown:Add("Nova Opção")
-  Dropdown:Add({"Opção A", "Opção B"})
-  ```
-
-- **Remover Opções**:
-  ```lua
-  Dropdown:Remove("Opção A") -- Remove pelo nome
-  Dropdown:Remove(1) -- Remove pelo índice
-  ```
-
-- **Substituir Opções**:
-  ```lua
-  Dropdown:Set({"Opção 1", "Opção 2", "Opção 3"}, true) -- Substitui todas as opções
-  Dropdown:Set({"Opção Extra"}, false) -- Adiciona sem limpar
-  ```
-
-- **Selecionar uma Opção**:
-  ```lua
-  Dropdown:Select("Opção 2") -- Seleciona pelo nome
-  Dropdown:Select(2) -- Seleciona pelo índice
-  ```
-
----
-
-## Exemplo Completo
-```lua
-local redzlib = require(game.ReplicatedStorage.redzlib) -- Substitua pelo caminho correto
-
--- Criar janela
-local Window = redzlib:MakeWindow({
-    Title = "Minha Interface",
-    SubTitle = "Teste de UI",
-    Size = UDim2.fromOffset(600, 400),
-    Theme = "Amoled"
+    Title = "redz Exploit Hub v2",  -- Título da janela
+    SubTitle = "Feito para cheats avançados",  -- Subtítulo opcional
+    Size = UDim2.fromOffset(550, 400),  -- Tamanho personalizado
+    Theme = "Amoled"  -- Tema (Amoled para glassmorphism escuro com red accents)
 })
 
--- Criar aba
+-- 2. Criar uma Aba (página dentro da janela)
 local Tab = Window:MakeTab({
-    Title = "Configurações",
-    Icon = "settings"
+    Title = "Combat Hacks",  -- Nome da aba
+    Icon = "sword"  -- Ícone Lucide (opcional, ex.: "sword" para combate)
 })
 
--- Adicionar seção
+-- 3. Adicionar uma Seção (agrupador de elementos na aba)
 local Section = Tab:AddSection({
-    Name = "Controles",
-    Color = Color3.fromRGB(200, 0, 0) -- Vermelho
+    Name = "Aimbot Settings",  -- Nome da seção
+    Color = Color3.fromRGB(200, 0, 0)  -- Cor personalizada (vermelho para destaque)
 })
 
--- Adicionar botão com tamanho personalizado
-local Button = Tab:AddButton({
-    Name = "Ativar Algo",
-    Desc = "Clique para ativar a função",
-    Size = UDim2.new(0.5, -20), -- Tamanho reduzido
-    Callback = function() print("Botão clicado!") end
+-- 4. Adicionar Elementos na Seção (exemplos básicos)
+local Toggle = Tab:AddToggle({  -- Toggle para ativar aimbot
+    Name = "Aimbot",
+    Desc = "Ativa o aimbot automático",
+    Default = false,  -- Estado inicial
+    Flag = "AimbotEnabled",  -- Flag para salvar estado
+    Callback = function(enabled)  -- Função executada ao mudar
+        if enabled then
+            -- Código do aimbot aqui (ex.: spawn thread para hack)
+            print("Aimbot ativado!")
+        else
+            print("Aimbot desativado!")
+        end
+    end
 })
 
--- Adicionar toggle
-local Toggle = Tab:AddToggle({
-    Name = "Modo Noturno",
-    Default = true,
-    Flag = "NightMode",
-    Callback = function(value) print("Modo Noturno:", value) end
+local Slider = Tab:AddSlider({  -- Slider para sensibilidade
+    Name = "Sensibilidade",
+    Desc = "Ajusta a precisão do aimbot",
+    Min = 0,  -- Valor mínimo
+    Max = 100,  -- Valor máximo
+    Increase = 1,  -- Incremento
+    Default = 50,  -- Valor inicial
+    Flag = "AimbotSens",  -- Flag para salvar
+    Callback = function(value)
+        -- Aplique o valor ao hack aqui
+        print("Sensibilidade:", value)
+    end
 })
 
--- Adicionar dropdown
+-- 5. Adicionar Outro Elemento (ex.: Dropdown para alvos)
 local Dropdown = Tab:AddDropdown({
-    Name = "Seleção de Modo",
-    Options = {"Fácil", "Médio", "Difícil"},
-    Default = "Médio",
-    Flag = "GameMode",
-    Callback = function(selected) print("Modo selecionado:", selected) end
+    Name = "Alvo Prioritário",
+    Desc = "Escolha o tipo de inimigo",
+    Options = {"Jogadores", "NPCs", "Todos"},  -- Opções iniciais
+    Default = "Jogadores",  -- Seleção inicial
+    MultiSelect = false,  -- Permitir múltipla seleção? (false por padrão)
+    Flag = "TargetType",  -- Flag para salvar
+    Callback = function(selected)
+        -- Aplique a seleção ao hack
+        print("Alvo:", selected)
+    end
 })
 
--- Adicionar slider
-local Slider = Tab:AddSlider({
-    Name = "Volume",
-    Min = 0,
-    Max = 100,
-    Increase = 1,
-    Default = 50,
-    Flag = "VolumeLevel",
-    Callback = function(value) print("Volume:", value) end
-})
-
--- Adicionar caixa de texto
-local TextBox = Tab:AddTextBox({
-    Name = "Nome do Jogador",
-    Default = "Jogador1",
-    PlaceholderText = "Digite seu nome",
-    ClearText = true,
-    Callback = function(text) print("Nome:", text) end
-})
-
--- Adicionar convite do Discord
-local DiscordInvite = Tab:AddDiscordInvite({
-    Name = "Junte-se ao Discord",
-    Desc = "Entre no nosso servidor!",
-    Logo = "rbxassetid://10734962339",
-    Invite = "https://discord.gg/exemplo"
-})
-
--- Adicionar seletor de cores
-local ColorPicker = Tab:AddColorPicker({
-    Name = "Cor de Fundo",
-    Default = Color3.fromRGB(255, 0, 0),
-    Callback = function(color) print("Cor selecionada:", color) end
-})
-
--- Atualizar dropdown dinamicamente
-task.spawn(function()
-    task.wait(5)
-    Dropdown:Set({"Muito Fácil", "Muito Difícil"}, true) -- Substitui opções
-    Dropdown:Select("Muito Difícil") -- Seleciona nova opção
-end)
+-- 6. Finalizar: O hub abre automaticamente. Use Window:CloseBtn() para fechar.
 ```
 
----
+**Saída Esperada**: Uma janela escura com glassmorphism abre, mostrando a aba "Combat Hacks" com seção vermelha contendo toggle, slider e dropdown. Interaja para testar callbacks.
 
-## Notas Finais
-- **Temas**: Use `Theme` para alternar entre "Darker", "Dark", "Purple" ou "Amoled". O tema Amoled suporta glassmorphism com transparência ajustável.
-- **Flags**: Use flags para salvar estados (ex.: `Flag = "nome"`). Eles persistem em `redzlib.Flags`.
-- **Mobile**: O seletor de cores e outros elementos são compatíveis com dispositivos móveis (toque).
-- **Ícones**: Use ícones da biblioteca Lucide (ex.: "home", "settings") com `redzlib:GetIcon("nome")`.
-- **Personalização**: Ajuste tamanhos de botões com `Size` e cores de seções com `Color`.
+Agora, vamos aos **métodos detalhados para cada elemento**.
 
-Para mais detalhes, consulte o código-fonte da biblioteca ou experimente os métodos no Roblox Studio.
+### 2. Métodos de Uso por Elemento
+Cada elemento é adicionado a uma aba (`Tab`). Eles retornam um objeto com métodos para manipulação (ex.: esconder, atualizar). Use flags para persistência (ex.: `Flag = "meuFlag"` salva em `redzlib.Flags`).
+
+#### Janela (Window) - Métodos Globais
+- **MakeWindow(Configs)**: Cria a janela raiz.
+  - Configs: `{Title, SubTitle, Size, Theme, Save}`.
+- **CloseBtn()**: Fecha a janela.
+- **MinimizeBtn()**: Minimiza/restaura.
+- **Minimize()**: Alterna visibilidade.
+- **Set(Title, SubTitle)**: Atualiza título/subtítulo.
+- **Dialog(Configs)**: Mostra diálogo modal.
+  - Ex.: `{Title = "Alerta", Text = "Hack ativado!", Options = {{Name = "OK", Callback = function() end}}}`.
+- **SelectTab(Tab ou Index)**: Muda para aba específica.
+- **MakeTab(Configs)**: Cria aba.
+  - Configs: `{Title, Icon}` (Icon = nome Lucide, ex.: "cog").
+
+#### Seção (Section) - Agrupador
+- **AddSection(Configs)**: Adiciona seção.
+  - Configs: `{Name, Color}` (Color = Color3 para título).
+- **Visible(Bool)**: Mostra/esconde seção.
+- **Set(Name)**: Atualiza nome.
+- **Destroy()**: Remove seção.
+
+#### Parágrafo (Paragraph) - Texto Informativo
+- **AddParagraph(Configs)**: Adiciona texto.
+  - Configs: `{Title, Text}`.
+- **Set(Title, Text)**: Atualiza texto.
+- **SetTitle(Title)** / **SetDesc(Text)**: Atualiza partes específicas.
+- **Visible(Bool)** / **Destroy()**: Controle básico.
+
+#### Botão (Button) - Ação Simples
+- **AddButton(Configs)**: Adiciona botão.
+  - Configs: `{Name, Desc, Size (UDim2), Callback (function)}`.
+- **Callback(Func)**: Atualiza função de clique.
+- **Set(Name, Desc)**: Atualiza texto.
+- **Visible(Bool)** / **Destroy()**: Controle.
+
+#### Toggle - Interruptor On/Off
+- **AddToggle(Configs)**: Adiciona toggle.
+  - Configs: `{Name, Desc, Default (bool), Flag (string), Callback (function(bool))}`.
+- **Set(Value (bool))** ou **Set(Name, Desc)**: Altera estado ou texto.
+- **Callback(Func)**: Atualiza função.
+- **Visible(Bool)** / **Destroy()**: Controle.
+
+#### Dropdown - Lista de Opções
+- **AddDropdown(Configs)**: Adiciona dropdown.
+  - Configs: `{Name, Desc, Options (table), Default, MultiSelect (bool), Flag, Callback (function(selected))}`.
+- **Add(Options (table ou strings))**: Adiciona opções.
+- **Remove(Option (string ou int))**: Remove por nome/índice.
+- **Select(Option (string ou int))**: Seleciona opção.
+- **Set(NewOptions (table), Clear (bool))**: Atualiza lista (Clear limpa antigas).
+- **Callback(Func)** / **Visible(Bool)** / **Destroy()**: Controle.
+
+#### Slider - Barra Deslizante
+- **AddSlider(Configs)**: Adiciona slider.
+  - Configs: `{Name, Desc, Min (num), Max (num), Increase (num), Default (num), Flag, Callback (function(num))}`.
+- **Set(Value (num))** ou **Set(Name, Desc)**: Altera valor ou texto.
+- **Callback(Func)** / **Visible(Bool)** / **Destroy()**: Controle.
+
+#### Caixa de Texto (TextBox) - Input
+- **AddTextBox(Configs)**: Adiciona input.
+  - Configs: `{Name, Desc, Default (string), PlaceholderText, ClearText (bool), Callback (function(text))}`.
+- **OnChanging = Func**: Manipula texto em tempo real (ex.: uppercase).
+- **Visible(Bool)** / **Destroy()**: Controle.
+
+#### Convite do Discord
+- **AddDiscordInvite(Configs)**: Adiciona botão de convite.
+  - Configs: `{Name, Desc, Logo (rbxassetid), Invite (string)}`.
+- **Visible(Bool)** / **Destroy()**: Controle.
+- Clique copia o invite para clipboard.
+
+#### Seletor de Cores (ColorPicker)
+- **AddColorPicker(Configs)**: Adiciona picker HSV.
+  - Configs: `{Name, Desc, Default (Color3), Callback (function(Color3))}`.
+- **Set(Color3)**: Atualiza cor.
+- **Callback(Func)** / **Visible(Bool)** / **Destroy()**: Controle.
+- Suporte mobile: Use toque para arrastar no picker.
+
+## Exemplos Avançados
+- **Atualizar Dropdown Dinamicamente** (ex.: carregar opções de um jogo):
+  ```lua
+  local Dropdown = Tab:AddDropdown({Name = "Itens", Options = {}})
+
+  -- Simule carregamento
+  task.spawn(function()
+      local newItems = {"Espada", "Escudo", "Poção"}  -- De um API ou loop
+      Dropdown:Set(newItems, true)  -- Limpa e adiciona
+      Dropdown:Select("Espada")
+  end)
+  ```
+
+- **Flag Persistente em Toggle**:
+  ```lua
+  local isEnabled = redzlib.Flags["MyHack"] or false  -- Recupera flag
+  Toggle:Set(isEnabled)  -- Aplica
+  ```
+
+## Contribuições
+- Fork o repo e envie PRs para novas features (ex.: mais temas).
+- Relate issues para bugs.
+
+## Licença
+MIT License - Use livremente, mas credite o autor.
+
+## Suporte
+- Discord: [Link do Servidor](https://discord.gg/exemplo)
+- Issues no GitHub para dúvidas.
